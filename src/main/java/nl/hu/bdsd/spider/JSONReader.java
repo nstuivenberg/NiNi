@@ -3,8 +3,10 @@ package nl.hu.bdsd.spider;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
+import nl.hu.bdsd.domain.Message;
 
 import java.io.*;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -18,6 +20,7 @@ public class JSONReader {
     private final static String FILELOCATION = "src/main/resources/complete-dump.json";
     private InputStream targetStream = null;
 
+    private List<Message> messageList;
 
     public JSONReader() {
 
@@ -58,35 +61,23 @@ public class JSONReader {
                 reader.endObject();
                 return;
             } else {
-                //JsonElement root = new JsonParser().parse(reader);
-                //root.toString();
-                System.out.println(reader.nextName());
-                reader.skipValue();
-
-                /*
+                //Only doing Message-Object now
                 if (token.equals(JsonToken.NAME)) {
                     //get the current token
                     fieldname = reader.nextName();
                 }
 
-                if ("name".equals(fieldname)) {
-                    //move to next token
+                if ("_type".equals(fieldname)) {
+                    //Alle types hebben als waarde item
                     token = reader.peek();
-                    System.out.println("Name: "+reader.nextString());
+                    System.out.println("_type: " + reader.nextString());
+                } else if("_score".equals(fieldname)) {
+                    //TODO: hier doorgaan
+                } else {
+                    reader.skipValue();
                 }
 
-                if("age".equals(fieldname)) {
-                    //move to next token
-                    token = reader.peek();
-                    System.out.println("Age:" + reader.nextInt());
-                }
 
-                if("verified".equals(fieldname)) {
-                    //move to next token
-                    token = reader.peek();
-                    System.out.println("Verified:" + reader.nextBoolean());
-                }
-                */
             }
         }
 
