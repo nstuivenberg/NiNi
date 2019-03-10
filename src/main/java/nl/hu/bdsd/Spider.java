@@ -1,6 +1,6 @@
 package nl.hu.bdsd;
 
-import nl.hu.bdsd.spider.JSONReader;
+import nl.hu.bdsd.spider.JsonPReader;
 
 /**
  * This simulates a spider that crawls the web.
@@ -13,6 +13,6 @@ import nl.hu.bdsd.spider.JSONReader;
 
 public class Spider {
     public static void main(String[] args) {
-        JSONReader j = new JSONReader();
+        JsonPReader j = new JsonPReader();
     }
 }
