@@ -1,4 +1,4 @@
-{
+[{
   "sort": [
     0
   ],
@@ -32,4 +32,4 @@
   "_score": null,
   "_index": "pfl_combined_index_fixed",
   "_id": "c1a38d6becb7e92d06ed5901226eedee9b208181"
-}
+}]
