@@ -12,7 +12,9 @@ import nl.hu.bdsd.spider.JsonPReader;
  */
 
 public class Spider {
+
     public static void main(String[] args) {
         JsonPReader j = new JsonPReader();
     }
+
 }

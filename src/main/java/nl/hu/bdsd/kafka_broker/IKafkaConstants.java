@@ -3,6 +3,7 @@ package nl.hu.bdsd.kafka_broker;
 public interface IKafkaConstants {
 
     String KAFKA_BROKERS = "nigelvanhattum.nl:9092";
+    //String KAFKA_BROKERS = "localhost:9092";
     Integer MESSAGE_COUNT=1000;
     String CLIENT_ID="poliFLWProducer";
     //String TOPIC_NAME="demo";

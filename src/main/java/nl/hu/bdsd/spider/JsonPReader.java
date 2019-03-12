@@ -1,9 +1,15 @@
 package nl.hu.bdsd.spider;
 
+import nl.hu.bdsd.kafka_broker.ProducerCreator;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
+
 import javax.json.Json;
 import javax.json.JsonValue;
 import javax.json.stream.JsonParser;
 import java.io.*;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -42,6 +48,18 @@ public class JsonPReader {
 
     private void publishMessagToKafka(String jsonMessage) {
         System.out.println(jsonMessage);
+        Producer<Long, String> producer = ProducerCreator.createProducer();
+
+        ProducerRecord<Long, String> record = new ProducerRecord<>("spider", jsonMessage);
+
+        try {
+            RecordMetadata metadata = producer.send(record).get();
+        } catch (ExecutionException e) {
+            System.out.println("Error in sending record");
+        } catch (InterruptedException i) {
+            System.out.println("Error in sending record");
+        }
+
         try {
             Thread.sleep(1000);
         } catch(InterruptedException i) {
