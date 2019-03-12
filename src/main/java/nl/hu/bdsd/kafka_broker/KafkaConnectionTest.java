@@ -5,20 +5,26 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.zookeeper.KeeperException;
 
 import java.util.concurrent.ExecutionException;
 
 public class KafkaConnectionTest {
     static String DEMOTOPICNAME = "demo";
-    public static void main(String[] args) {
-        //runProducer();
+    public static void main(String[] args) throws InterruptedException, KeeperException.NotEmptyException, ExecutionException {
+
+        runProducer();
+
+        Thread.sleep(3000);
+        System.out.println("Starting...");
+
         runConsumer();
     }
-    static void runConsumer() {
-        Consumer<Long, String> consumer = ConsumerCreator.createConsumer(DEMOTOPICNAME);
+    static void runConsumer() throws KeeperException.NotEmptyException {
+        CusKafkaConsumer consumer = new CusKafkaConsumer(DEMOTOPICNAME);
         int noMessageFound = 0;
         while (true) {
-            ConsumerRecords<Long, String> consumerRecords = consumer.poll(1000);
+            ConsumerRecords<Long, String> consumerRecords = consumer.getConsumer().poll(1000);
             // 1000 is the time in milliseconds consumer will wait if no record is found at broker.
             if (consumerRecords.count() == 0) {
                 noMessageFound++;
@@ -36,26 +42,14 @@ public class KafkaConnectionTest {
                 System.out.println("Record offset " + record.offset());
             });
             // commits the offset of record to broker.
-            consumer.commitAsync();
+            consumer.getConsumer().commitAsync();
         }
-        consumer.close();
+        consumer.getConsumer().close();
     }
-    static void runProducer() {
-        Producer<Long, String> producer = ProducerCreator.createProducer();
+    static void runProducer() throws ExecutionException, InterruptedException {
+        CusKafkaProducer producer = new CusKafkaProducer();
         for (int index = 0; index < IKafkaConstants.MESSAGE_COUNT; index++) {
-            ProducerRecord<Long, String> record = new ProducerRecord<Long, String>(DEMOTOPICNAME,
-                    "This is record " + index);
-            try {
-                RecordMetadata metadata = producer.send(record).get();
-                System.out.println("Record sent with key " + index + " to partition " + metadata.partition()
-                        + " with offset " + metadata.offset());
-            } catch (ExecutionException e) {
-                System.out.println("Error in sending record");
-                System.out.println(e);
-            } catch (InterruptedException e) {
-                System.out.println("Error in sending record");
-                System.out.println(e);
-            }
+            producer.produce(DEMOTOPICNAME,"This is record " + index);
         }
     }
 }
