@@ -1,6 +1,7 @@
 package nl.hu.bdsd.domain;
 
 import java.time.Instant;
+import java.util.HashMap;
 
 public class MessageSourceMeta {
     private Instant processingStarted;
@@ -12,6 +13,16 @@ public class MessageSourceMeta {
     private String sourceId;
     private String id; //dubbelop, zit ook in MessageSource
     private MessageSourceMetaOOU originalObjectUrls;
+
+    public HashMap<String, Integer> getWordCount() {
+        return wordCount;
+    }
+
+    public void setWordCount(HashMap<String, Integer> wordCount) {
+        this.wordCount = wordCount;
+    }
+
+    private HashMap<String, Integer> wordCount;
 
     public Instant getProcessingStarted() {
         return processingStarted;
