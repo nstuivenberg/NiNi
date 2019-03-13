@@ -1,11 +1,12 @@
 package nl.hu.bdsd.domain;
 
-import java.time.Instant;
 import java.util.HashMap;
 
+//TODO: pfl_url
+
 public class MessageSourceMeta {
-    private Instant processingStarted;
-    private Instant processingFinished;
+    private String processingStarted;
+    private String processingFinished;
     private String rights;
     private String collection;
 
@@ -24,12 +25,20 @@ public class MessageSourceMeta {
 
     private HashMap<String, Integer> wordCount;
 
-    public Instant getProcessingStarted() {
+    public String getProcessingStarted() {
         return processingStarted;
     }
 
-    public void setProcessingStarted(Instant processingStarted) {
+    public void setProcessingStarted(String processingStarted) {
         this.processingStarted = processingStarted;
+    }
+
+    public String getProcessingFinished() {
+        return processingFinished;
+    }
+
+    public void setProcessingFinished(String processingFinished) {
+        this.processingFinished = processingFinished;
     }
 
     public String getRights() {

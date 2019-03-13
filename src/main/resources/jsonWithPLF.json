@@ -1,0 +1,41 @@
+[{
+  "sort": [
+    187
+  ],
+  "_type": "item",
+  "_source": {
+    "description": "<div class=\"text\">&#13;\n\t\t\t\t\t\t\t<div id=\"text2\">&#13;\n\t\t\t\t\t\t\t\t<p><span style=\"color: rgb(20, 24, 35); font-family: Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif; font-size: 14px; line-height: 20px; background-color: rgb(255, 255, 255);\">Maandag 8 december houdt de SGP fractie weer een spreekuur. U bent van harte welkom vanaf 19:30 uur. Graag van tevoren wel even opgeven bij Paul Schultink, 06-23230593 of paulschultink@krimpenaandenijs</span><wbr style=\"color: rgb(20, 24, 35); font-family: Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif; font-size: 14px; line-height: 20px; background-color: rgb(255, 255, 255);\"/><span style=\"color: rgb(20, 24, 35); font-family: Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif; font-size: 14px; line-height: 20px; background-color: rgb(255, 255, 255);\">sel.nl</span></p>\t\t\t\t\t\t\t</div>&#13;\n\t\t\t\t\t\t</div>&#13;\n&#13;\n\t\t\t\t\t\t",
+    "date_granularity": 12,
+    "title": "8 december spreekuur 19:30 uur",
+    "source": "Partij nieuws",
+    "meta": {
+      "processing_started": "2017-12-05T19:20:20.920470",
+      "_type": "item",
+      "processing_finished": "2018-01-10T23:55:00.240104",
+      "_index": "pfl_combined_index_20180103",
+      "_score": 1.0,
+      "rights": "Undefined",
+      "collection": "SGP",
+      "pfl_url": "https://api.poliflw.nl/v0/sgp_archives_krimpenaandenijssel/86ed6dba73a78d3f0cdf4447e8fa52927fe6bdc3",
+      "original_object_id": "http://www.krimpenaandenijssel.sgp.nl/actueel/8-december-spreekuur-1930-uur/2446",
+      "source_id": "sgp_archives_krimpenaandenijssel",
+      "_id": "86ed6dba73a78d3f0cdf4447e8fa52927fe6bdc3",
+      "original_object_urls": {
+        "html": "http://www.krimpenaandenijssel.sgp.nl/actueel/8-december-spreekuur-1930-uur/2446"
+      }
+    },
+    "location": "Krimpenerwaard",
+    "parties": [
+      "SGP"
+    ],
+    "date": "2014-12-03T00:00:00",
+    "all_text": "",
+    "hidden": false,
+    "type": "Partij",
+    "enrichments": {}
+  },
+  "_score": null,
+  "_index": "pfl_combined_index_fixed",
+  "_id": "86ed6dba73a78d3f0cdf4447e8fa52927fe6bdc3"
+}
+]

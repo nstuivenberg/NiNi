@@ -62,4 +62,16 @@ public class Message {
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n id: " + this.getId());
+        sb.append("\n index: " + this.getIndex());
+        if(this.getScore() != null) {
+            sb.append("\n score: " + this.getScore());
+        }
+
+        return sb.toString();
+    }
 }
