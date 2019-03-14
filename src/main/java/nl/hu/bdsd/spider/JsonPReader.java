@@ -10,13 +10,41 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-public class JsonPReader {
+public class JsonPReader  implements Runnable {
 
     private final static Logger LOGGER = Logger.getLogger(JsonPReader.class.getName());
     private final static String FILELOCATION = "src/main/resources/complete-dump.json";
     private InputStream targetStream = null;
 
     public JsonPReader() {
+    }
+
+    private void publishMessagToKafka(String jsonMessage) {
+        System.out.println(jsonMessage);
+
+        CusKafkaProducer kafkaProducer = new CusKafkaProducer();
+
+        try {
+            kafkaProducer.produce("spider", jsonMessage);
+        } catch (ExecutionException e) {
+            System.out.println("Error in sending record");
+        } catch (InterruptedException i) {
+            System.out.println("Error in sending record");
+        }
+
+        try {
+            Thread.sleep(1000);
+        } catch(InterruptedException i) {
+            i.printStackTrace();
+        }
+    }
+
+    @Override
+    public void run() {
+        doRun();
+    }
+
+    private void doRun() {
         try {
             File file = new File(FILELOCATION);
             targetStream = new FileInputStream(file);
@@ -39,25 +67,6 @@ public class JsonPReader {
             targetStream.close();
         } catch (IOException io) {
             LOGGER.severe("IO exceptie.");
-        }
-    }
-    private void publishMessagToKafka(String jsonMessage) {
-        System.out.println(jsonMessage);
-
-        CusKafkaProducer kafkaProducer = new CusKafkaProducer();
-
-        try {
-            kafkaProducer.produce("spider", jsonMessage);
-        } catch (ExecutionException e) {
-            System.out.println("Error in sending record");
-        } catch (InterruptedException i) {
-            System.out.println("Error in sending record");
-        }
-
-        try {
-            Thread.sleep(1000);
-        } catch(InterruptedException i) {
-            i.printStackTrace();
         }
     }
 }

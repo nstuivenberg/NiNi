@@ -1,11 +1,11 @@
 package nl.hu.bdsd.jobs;
 
 import nl.hu.bdsd.domain.Message;
-import nl.hu.bdsd.kafka_broker.CusKafkaConsumer;
+import nl.hu.bdsd.domain.serde.MessageSerdeDeserializer;
+import nl.hu.bdsd.domain.serde.MessageSerdeSerializer;
 import nl.hu.bdsd.kafka_broker.IKafkaConstants;
 import nl.hu.bdsd.util.Json2Object;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.Consumed;
@@ -13,10 +13,8 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KStreamBuilder;
-import org.apache.zookeeper.KeeperException;
+import org.apache.kafka.streams.kstream.Produced;
 
-import java.time.Duration;
 import java.util.Properties;
 
 /**
@@ -31,7 +29,7 @@ public class SanitizeJSON implements Runnable {
 
 
     private static String SOURCE_TOPIC = "spider";
-    private static String SINK_TOPIC = "unknown";
+    private static String SINK_TOPIC = "clean_data";
     private KafkaStreams streams;
 
     public SanitizeJSON() {
@@ -57,14 +55,17 @@ public class SanitizeJSON implements Runnable {
 
         final StreamsBuilder builder = new StreamsBuilder();
 
-        //final KStream<Long, String> inputTopic = builder.stream("spider");
-
-        //String result = inputTopic.flatMapValues()
-
-        final KStream<Long, String> aLittleStream =
+        final KStream<Long, String> readStream =
                 builder.stream(SOURCE_TOPIC, Consumed.with(longSerde, stringSerde));
 
-        aLittleStream.foreach((k,v) -> forFun(v));
+
+        final KStream<Long, Message> jsonToObjStream = readStream.mapValues((String v) ->
+            this.jsonToMessage(v));
+
+
+        jsonToObjStream.to(SINK_TOPIC, Produced.with(Serdes.Long(),
+                        Serdes.serdeFrom(new MessageSerdeSerializer()
+                                , new MessageSerdeDeserializer())));
 
         return new KafkaStreams(builder.build(), streamsConfiguration);
     }
@@ -73,25 +74,12 @@ public class SanitizeJSON implements Runnable {
     public void run() {
         doRun();
     }
-
     private void doRun(){
         streams.start();
     }
-
-    private void forFun(String message) {
-        System.out.println("From le topic: " + message);
-        Message m = jsonToMessage(message);
-        System.out.println(m.toString());
-
-
-    }
-
     private Message jsonToMessage(String json) {
+        System.out.println("Binnenkomende JSON: " + json);
         return Json2Object.jsonToMesage(json);
-
-    }
-
-    private void processJsonMessage() {
 
     }
 }

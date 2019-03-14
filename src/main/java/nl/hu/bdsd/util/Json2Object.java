@@ -18,10 +18,7 @@ import java.io.InputStream;
 /*
  * TODO: Deze lijst afmaken
  * TODO: Arrays verwerken
- * TODO: Integers verwerken
  */
-
-
 public class Json2Object {
 
     public static Message jsonToMesage(String json) {
@@ -69,6 +66,10 @@ public class Json2Object {
             }
         }
 
+        messageSourceMeta.setOriginalObjectUrls(messageSourceMetaOOU);
+        messageSource.setMeta(messageSourceMeta);
+        m.setMessageSource(messageSource);
+
         return m;
 
     }
@@ -88,28 +89,34 @@ public class Json2Object {
         } else if (keyName.equals("description")) {
             mSource.setDescription(value);
             mSource.setSanitizedDescription(value);
-        } else if(keyName.equals("source")) {
+        } else if (keyName.equals("source")) {
             mSource.setSource(value);
-        } else if(keyName.equals("location")) {
+        } else if (keyName.equals("location")) {
             mSource.setLocation(value);
-        } else if(keyName.equals("all_text")) {
+        } else if (keyName.equals("all_text")) {
             mSource.setAll_text(value);
-        } else if(keyName.equals("date")) {
+        } else if (keyName.equals("date")) {
             mSource.setDate(value);
-        } else if(keyName.equals("type")) {
+        } else if (keyName.equals("type")) {
             mSource.setType(value);
-        } else if(keyName.equals("processing_started")) {
+        } else if (keyName.equals("title")) {
+            mSource.setTitle(value);
+        } else if (keyName.equals("processing_started")) {
             msMeta.setProcessingStarted(value);
-        } else if(keyName.equals("processing_finished")) {
+        } else if (keyName.equals("processing_finished")) {
             msMeta.setProcessingFinished(value);
-        } else if(keyName.equals("rights")) {
+        } else if (keyName.equals("rights")) {
             msMeta.setRights(value);
-        } else if(keyName.equals("collection")) {
+        } else if (keyName.equals("collection")) {
             msMeta.setCollection(value);
-        } else if(keyName.equals("original_object_id")) {
+        } else if (keyName.equals("original_object_id")) {
             msMeta.setOriginalObjectId(value);
-        } else if(keyName.equals("source_id")) {
+        } else if (keyName.equals("source_id")) {
             msMeta.setSourceId(value);
+        } else if (keyName.equals("pfl_url")) {
+            msMeta.setPfl_url(value);
+        } else if(keyName.equals("html")) {
+            msmOOU.setHtml(value);
         } else {
             System.out.println("Unknown Key: " + keyName);
         }

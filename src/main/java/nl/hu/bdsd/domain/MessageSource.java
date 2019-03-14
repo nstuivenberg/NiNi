@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-//TODO title
-
 public class MessageSource {
 
     private final static Logger LOGGER = Logger.getLogger(MessageSource.class.getName());
@@ -36,6 +34,8 @@ public class MessageSource {
     private String type;
 
     private boolean hidden;
+
+    private String title;
 
     private final static String FILELOCATION = "src/main/resources/stopwordsNL.txt";
 
@@ -129,6 +129,14 @@ public class MessageSource {
         this.hidden = hidden;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public void setSanitizedDescription(String sanitizedDescription) {
 
         sanitizedDescription = sanitizedDescription.replaceAll(">","> ");
@@ -148,7 +156,7 @@ public class MessageSource {
         List<String> lines = Files.readAllLines(Paths.get(FILELOCATION), Charset.defaultCharset());
         String[] bannedWords = lines.toArray(new String[lines.size()]);
         for (String b : bannedWords) {
-            if (s.equals(b)) {
+            if (s.toLowerCase().equals(b.toLowerCase())) {
                 return "";
             }
         }

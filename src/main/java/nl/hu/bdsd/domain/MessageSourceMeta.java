@@ -2,8 +2,6 @@ package nl.hu.bdsd.domain;
 
 import java.util.HashMap;
 
-//TODO: pfl_url
-
 public class MessageSourceMeta {
     private String processingStarted;
     private String processingFinished;
@@ -14,6 +12,8 @@ public class MessageSourceMeta {
     private String sourceId;
     private String id; //dubbelop, zit ook in MessageSource
     private MessageSourceMetaOOU originalObjectUrls;
+
+    private String pfl_url;
 
     public HashMap<String, Integer> getWordCount() {
         return wordCount;
@@ -87,5 +87,13 @@ public class MessageSourceMeta {
 
     public void setOriginalObjectUrls(MessageSourceMetaOOU originalObjectUrls) {
         this.originalObjectUrls = originalObjectUrls;
+    }
+
+    public String getPfl_url() {
+        return pfl_url;
+    }
+
+    public void setPfl_url(String pfl_url) {
+        this.pfl_url = pfl_url;
     }
 }
