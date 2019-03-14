@@ -26,8 +26,8 @@ import java.util.Properties;
 public class SanitizeJSON implements Runnable {
 
 
-    private static String SOURCE_TOPIC = "spider";
-    private static String SINK_TOPIC = "nickTopic";
+    private static String SOURCE_TOPIC = "nick.raw";
+    private static String SINK_TOPIC = "nick.clean-data";
     private KafkaStreams streams;
 
     private long counter = 0;
@@ -48,8 +48,6 @@ public class SanitizeJSON implements Runnable {
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         streamsConfiguration.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 100 * 1000);
 
-        // Set up serializers and deserializers, which we will use for overriding the default serdes
-        // specified above.
         final Serde<String> stringSerde = Serdes.String();
         final Serde<Long> longSerde = Serdes.Long();
 
@@ -58,6 +56,9 @@ public class SanitizeJSON implements Runnable {
         final KStream<Long, String> readStream =
                 builder.stream(SOURCE_TOPIC, Consumed.with(longSerde, stringSerde));
 
+        /*
+        DO not replace. We are not running java 9.
+         */
         final KStream<Long, Message> converted = readStream.map(
                 new KeyValueMapper<Long, String, KeyValue<? extends Long, ? extends Message>>() {
                     @Override

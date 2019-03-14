@@ -20,16 +20,15 @@ public class JsonPReader  implements Runnable {
     }
 
     private void publishMessagToKafka(String jsonMessage) {
-        //System.out.println(jsonMessage);
 
         CusKafkaProducer kafkaProducer = new CusKafkaProducer();
 
         try {
-            kafkaProducer.produce("spider", jsonMessage);
+            kafkaProducer.produce("nick.raw", jsonMessage);
         } catch (ExecutionException e) {
             System.out.println("Error in sending record");
         } catch (InterruptedException i) {
-            System.out.println("Error in sending record");
+            System.out.println("Error in sending record. Looks Interrupted.");
         }
 
         try {

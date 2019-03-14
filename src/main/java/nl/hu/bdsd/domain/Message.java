@@ -1,5 +1,8 @@
 package nl.hu.bdsd.domain;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Holds the result of the spider and the various micro-jobs
  *
@@ -14,6 +17,9 @@ public class Message {
     private String score;
     private String index;
     private String id;
+
+    private Map<String, Map<Integer, Float>> tfidf = new HashMap<>();
+
 
     public int getSort() {
         return sort;
