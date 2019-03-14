@@ -54,7 +54,17 @@ public class Json2Object {
                     keyName = jsonParser.getString();
                     break;
                 case VALUE_STRING:
-                    setStringValues(m, messageSource, messageSourceMeta, messageSourceMetaOOU, keyName, jsonParser.getString());
+                    setStringValues(m, messageSource, messageSourceMeta, messageSourceMetaOOU, keyName,
+                            jsonParser.getString());
+                    break;
+                case VALUE_NUMBER:
+                    setIntValues(messageSource, keyName, jsonParser.getInt());
+                    break;
+                case VALUE_FALSE:
+                    setBoolValues(messageSource, keyName, false);
+                    break;
+                case VALUE_TRUE:
+                    setBoolValues(messageSource, keyName, true);
                     break;
             }
         }
@@ -68,8 +78,8 @@ public class Json2Object {
         if (keyName.equals("_type")) {
             message.setType(value);
         } else if (keyName.equals("_source")) {
-            if(value != null)
-            message.setScore("value");
+            if (value != null)
+                message.setScore("value");
         } else if (keyName.equals("_index")) {
             message.setIndex(value);
         } else if (keyName.equals("_id")) {
@@ -105,4 +115,15 @@ public class Json2Object {
         }
     }
 
+    private static void setIntValues(MessageSource mSource, String keyName, int value) {
+        if(keyName.equals("date_granularity")) {
+            mSource.setDate_granulariry(value);
+        }
+    }
+
+    private static void setBoolValues(MessageSource messageSource, String keyName, boolean value) {
+        if(keyName.equals("hidden")) {
+            messageSource.setHidden(value);
+        }
+    }
 }

@@ -1,15 +1,23 @@
 package nl.hu.bdsd.domain;
 
-import org.owasp.html.ElementPolicy;
-import org.owasp.html.HtmlPolicyBuilder;
-import org.owasp.html.PolicyFactory;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 //TODO title
 
 public class MessageSource {
+
+    private final static Logger LOGGER = Logger.getLogger(MessageSource.class.getName());
     private String description;
 
     private String sanitizedDescription;
@@ -27,8 +35,11 @@ public class MessageSource {
     private String all_text;
     private String type;
 
+    private boolean hidden;
+
+    private final static String FILELOCATION = "src/main/resources/stopwordsNL.txt";
+
     //TODO Enrichments, wat zijn deze?
-    //TODO Hidden
 
     public MessageSource() {
         parties = new ArrayList<>();
@@ -110,12 +121,40 @@ public class MessageSource {
         return sanitizedDescription;
     }
 
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
     public void setSanitizedDescription(String sanitizedDescription) {
-        PolicyFactory policy = new HtmlPolicyBuilder()
-                .toFactory();
-        String txt =  policy.sanitize(sanitizedDescription).replaceAll("\\<.*?\\>", "");
-        this.sanitizedDescription = txt;
+
+        sanitizedDescription = sanitizedDescription.replaceAll(">","> ");
+        String finalStr =
+                Arrays.stream(sanitizedDescription.split("\\s+")) // Splitting you string
+                        .map(str -> transformWord(str)) // Map as per your logic
+                        .collect(Collectors.joining(" ")); // Joining back with space
+        String safe = Jsoup.clean(finalStr, Whitelist.none());
+
+        this.sanitizedDescription = safe;
         System.out.println("\n------------------------------\n");
         System.out.println(this.sanitizedDescription);
+    }
+    private String transformWord(String s) {
+        //String[] bannedWords = {"de", "het", "en", "een"};
+    try {
+        List<String> lines = Files.readAllLines(Paths.get(FILELOCATION), Charset.defaultCharset());
+        String[] bannedWords = lines.toArray(new String[lines.size()]);
+        for (String b : bannedWords) {
+            if (s.equals(b)) {
+                return "";
+            }
+        }
+    } catch(IOException io) {
+        LOGGER.severe("Could not find list of banned words");
+    }
+        return s;
     }
 }
