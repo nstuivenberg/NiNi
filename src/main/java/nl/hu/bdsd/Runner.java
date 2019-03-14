@@ -18,6 +18,7 @@ public class Runner {
         SanitizeJSON s = new SanitizeJSON();
         jobs.add(s);
         jobs.add(new JsonPReader());
+        jobs.add(new TopicTester());
 
         for (Runnable r : jobs) {
             r.run();

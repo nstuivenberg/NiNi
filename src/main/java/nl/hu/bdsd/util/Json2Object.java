@@ -22,17 +22,12 @@ import java.io.InputStream;
 public class Json2Object {
 
     public static Message jsonToMesage(String json) {
+        Message message = readJson(json);
 
-        Message message =new Message();
-        try {
-            message = readJson(json);
-        } catch (IOException i) {
-            i.printStackTrace();
-        }
         return message;
     }
 
-    private static Message readJson(String json) throws IOException {
+    private static Message readJson(String json) {
 
         Message m = new Message();
         MessageSource messageSource = new MessageSource();

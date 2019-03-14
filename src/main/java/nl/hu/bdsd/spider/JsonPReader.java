@@ -20,7 +20,7 @@ public class JsonPReader  implements Runnable {
     }
 
     private void publishMessagToKafka(String jsonMessage) {
-        System.out.println(jsonMessage);
+        //System.out.println(jsonMessage);
 
         CusKafkaProducer kafkaProducer = new CusKafkaProducer();
 

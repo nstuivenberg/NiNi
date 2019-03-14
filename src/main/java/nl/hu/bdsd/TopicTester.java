@@ -1,10 +1,9 @@
-package nl.hu.bdsd.jobs;
+package nl.hu.bdsd;
 
 import nl.hu.bdsd.domain.Message;
 import nl.hu.bdsd.domain.serde.MessageSerdeDeserializer;
 import nl.hu.bdsd.domain.serde.MessageSerdeSerializer;
 import nl.hu.bdsd.kafka_broker.IKafkaConstants;
-import nl.hu.bdsd.util.Json2Object;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
@@ -13,28 +12,16 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.Produced;
 
 import java.util.Properties;
 
-/**
- * Represents the first step after the spider has published the RAW json.
- * 1. Turn JSON to Objects
- * 2. Sanitize html.
- * 3. Remove 'leestekens'
- * 4. remove list of unwanted words like: de, het, een, van et cetera.
- */
+public class TopicTester implements Runnable {
 
-public class SanitizeJSON implements Runnable {
-
-
-    private static String SOURCE_TOPIC = "spider";
+    private static String SOURCE_TOPIC = "clean_data";
     private static String SINK_TOPIC = "clean_data";
     private KafkaStreams streams;
 
-    private long counter = 0;
-
-    public SanitizeJSON() {
+    public TopicTester() {
         this.streams = buildKafkaStream();
     }
 
@@ -50,43 +37,34 @@ public class SanitizeJSON implements Runnable {
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         streamsConfiguration.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 100 * 1000);
 
-        // Set up serializers and deserializers, which we will use for overriding the default serdes
-        // specified above.
-        final Serde<String> stringSerde = Serdes.String();
         final Serde<Long> longSerde = Serdes.Long();
+        final Serde<Message> messageSerde = Serdes.serdeFrom(new MessageSerdeSerializer(),
+                new MessageSerdeDeserializer());
 
         final StreamsBuilder builder = new StreamsBuilder();
 
-        final KStream<Long, String> readStream =
-                builder.stream(SOURCE_TOPIC, Consumed.with(longSerde, stringSerde));
+        final KStream<Long, Message> readStream = builder.stream(SOURCE_TOPIC,
+                Consumed.with(longSerde, messageSerde));
 
-
-        final KStream<Long, Message> jsonToObjStream = readStream.mapValues(value ->
-            this.jsonToMessage(value.toLowerCase()));
-
-        final KStream<Long, Message> jtos = readStream.foreach( (k, v) -> {
-                Long key = k;
-
-         });
-
-
-        jsonToObjStream.to(SINK_TOPIC, Produced.with(Serdes.Long(),
-                        Serdes.serdeFrom(new MessageSerdeSerializer()
-                                , new MessageSerdeDeserializer())));
+        readStream.foreach(
+                (k, m) -> {
+                    printMessageObject(m);
+                });
 
         return new KafkaStreams(builder.build(), streamsConfiguration);
+    }
+
+    private void printMessageObject(Message m) {
+
+        System.out.println("Topic Tester" + m.toString());
     }
 
     @Override
     public void run() {
         doRun();
     }
-    private void doRun(){
-        streams.start();
-    }
-    private Message jsonToMessage(String json) {
-        //System.out.println("Binnenkomende JSON: " + json);
-        return Json2Object.jsonToMesage(json);
 
+    private void doRun() {
+        streams.start();
     }
 }

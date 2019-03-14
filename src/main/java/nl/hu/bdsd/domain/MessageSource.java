@@ -147,8 +147,8 @@ public class MessageSource {
         String safe = Jsoup.clean(finalStr, Whitelist.none());
 
         this.sanitizedDescription = safe;
-        System.out.println("\n------------------------------\n");
-        System.out.println(this.sanitizedDescription);
+        //System.out.println("\n------------------------------\n");
+        //System.out.println(this.sanitizedDescription);
     }
     private String transformWord(String s) {
         //String[] bannedWords = {"de", "het", "en", "een"};
