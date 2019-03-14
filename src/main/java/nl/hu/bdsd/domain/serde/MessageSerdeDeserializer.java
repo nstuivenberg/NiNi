@@ -22,6 +22,8 @@ public class MessageSerdeDeserializer implements Deserializer<Message> {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("From the Deserializer");
+        System.out.println(message.toString());
         return message;
     }
 

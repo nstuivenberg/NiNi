@@ -21,18 +21,18 @@ import java.io.InputStream;
  */
 public class Json2Object {
 
-    public static Message jsonToMesage(String json) {
-        Message message = readJson(json);
+    private Message m = new Message();
+    private MessageSource messageSource = new MessageSource();
+    private MessageSourceMeta messageSourceMeta = new MessageSourceMeta();
+    private MessageSourceMetaOOU messageSourceMetaOOU = new MessageSourceMetaOOU();
 
-        return message;
+    public Message jsonToMesage(String json) {
+
+        this.readJson(json);
+        return m;
     }
 
-    private static Message readJson(String json) {
-
-        Message m = new Message();
-        MessageSource messageSource = new MessageSource();
-        MessageSourceMeta messageSourceMeta = new MessageSourceMeta();
-        MessageSourceMetaOOU messageSourceMetaOOU = new MessageSourceMetaOOU();
+    private void readJson(String json) {
 
         InputStream input = new ByteArrayInputStream(json.getBytes());
         JsonParser jsonParser = Json.createParser(input);
@@ -52,12 +52,12 @@ public class Json2Object {
                 case VALUE_NUMBER:
                     setIntValues(messageSource, keyName, jsonParser.getInt());
                     break;
-                case VALUE_FALSE:
-                    setBoolValues(messageSource, keyName, false);
-                    break;
-                case VALUE_TRUE:
-                    setBoolValues(messageSource, keyName, true);
-                    break;
+                //case VALUE_FALSE:
+                //    setBoolValues(messageSource, keyName, false);
+                //    break;
+                //case VALUE_TRUE:
+                //    setBoolValues(messageSource, keyName, true);
+                //    break;
             }
         }
 
@@ -65,11 +65,11 @@ public class Json2Object {
         messageSource.setMeta(messageSourceMeta);
         m.setMessageSource(messageSource);
 
-        return m;
+        System.out.println("Message in j2o: " + m.toString());
 
     }
 
-    private static void setStringValues(Message message, MessageSource mSource, MessageSourceMeta msMeta,
+    private void setStringValues(Message message, MessageSource mSource, MessageSourceMeta msMeta,
                                         MessageSourceMetaOOU msmOOU, String keyName, String value) {
         if (keyName.equals("_type")) {
             message.setType(value);
@@ -117,13 +117,13 @@ public class Json2Object {
         }
     }
 
-    private static void setIntValues(MessageSource mSource, String keyName, int value) {
+    private void setIntValues(MessageSource mSource, String keyName, int value) {
         if(keyName.equals("date_granularity")) {
             mSource.setDate_granulariry(value);
         }
     }
 
-    private static void setBoolValues(MessageSource messageSource, String keyName, boolean value) {
+    private void setBoolValues(MessageSource messageSource, String keyName, boolean value) {
         if(keyName.equals("hidden")) {
             messageSource.setHidden(value);
         }

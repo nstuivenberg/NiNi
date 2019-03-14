@@ -17,7 +17,7 @@ import java.util.Properties;
 
 public class TopicTester implements Runnable {
 
-    private static String SOURCE_TOPIC = "clean_data";
+    private static String SOURCE_TOPIC = "nickTopic";
     private static String SINK_TOPIC = "clean_data";
     private KafkaStreams streams;
 
@@ -30,7 +30,7 @@ public class TopicTester implements Runnable {
 
         streamsConfiguration.put(StreamsConfig.CLIENT_ID_CONFIG, IKafkaConstants.CLIENT_ID);
         streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, IKafkaConstants.KAFKA_BROKERS);
-        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "json-to-object-conversion");
+        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "topic-tester");
 
         streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.Long().getClass().getName());
@@ -47,16 +47,17 @@ public class TopicTester implements Runnable {
                 Consumed.with(longSerde, messageSerde));
 
         readStream.foreach(
-                (k, m) -> {
-                    printMessageObject(m);
-                });
+                (k, m) -> printMessageObject(m));
 
         return new KafkaStreams(builder.build(), streamsConfiguration);
     }
 
     private void printMessageObject(Message m) {
-
-        System.out.println("Topic Tester" + m.toString());
+        System.out.println("I print");
+        if(m == null) {
+            System.out.println("M is NULL!");
+        }
+        System.out.println("Topic Tester: " + m.toString());
     }
 
     @Override

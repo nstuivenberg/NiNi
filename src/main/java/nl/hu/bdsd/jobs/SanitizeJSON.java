@@ -10,7 +10,7 @@ import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.*;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.apache.kafka.streams.kstream.Produced;
 
 import java.util.Properties;
@@ -27,7 +27,7 @@ public class SanitizeJSON implements Runnable {
 
 
     private static String SOURCE_TOPIC = "spider";
-    private static String SINK_TOPIC = "clean_data";
+    private static String SINK_TOPIC = "nickTopic";
     private KafkaStreams streams;
 
     private long counter = 0;
@@ -58,12 +58,34 @@ public class SanitizeJSON implements Runnable {
         final KStream<Long, String> readStream =
                 builder.stream(SOURCE_TOPIC, Consumed.with(longSerde, stringSerde));
 
+        final KStream<Long, Message> converted = readStream.map(
+                new KeyValueMapper<Long, String, KeyValue<? extends Long, ? extends Message>>() {
+                    @Override
+                    public KeyValue<? extends Long, ? extends Message> apply(Long aLong, String s) {
+                        return new KeyValue<>(aLong, this.jsonToMessage(s));
+                    }
+                    private Message jsonToMessage(String json) {
+                        System.out.println("Binnenkomende JSON: " + json);
 
-        final KStream<Long, Message> jsonToObjStream = readStream.mapValues(value ->
-            this.jsonToMessage(value.toLowerCase()));
+                        Json2Object jo = new Json2Object();
 
-        final KStream<Long, Message> jtos = readStream.map( (key, valueJson) ->
-                KeyValue.pair(key, Json2Object.jsonToMesage(valueJson)));
+                        Message m = jo.jsonToMesage(json);
+                        System.out.println("INSIDIES: " + m.toString());
+
+                        return m;
+
+                    }
+                });
+
+        //converted.foreach((Long k, Message v) -> {
+        //    System.out.println("FOR EACH MOFO");
+        //    System.out.println("key: " + k + " value: " + v.toString());
+        //});
+
+        //Hier is het een dikke vette null....
+        converted.to(SINK_TOPIC, Produced.with(Serdes.Long(),
+                        Serdes.serdeFrom(new MessageSerdeSerializer()
+                                , new MessageSerdeDeserializer())));
 
         return new KafkaStreams(builder.build(), streamsConfiguration);
     }
@@ -74,10 +96,5 @@ public class SanitizeJSON implements Runnable {
     }
     private void doRun(){
         streams.start();
-    }
-    private Message jsonToMessage(String json) {
-        //System.out.println("Binnenkomende JSON: " + json);
-        return Json2Object.jsonToMesage(json);
-
     }
 }
