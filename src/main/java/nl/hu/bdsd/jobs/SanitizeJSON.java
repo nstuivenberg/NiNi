@@ -8,11 +8,9 @@ import nl.hu.bdsd.util.Json2Object;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.streams.Consumed;
-import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.*;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Produced;
 
 import java.util.Properties;
@@ -64,15 +62,8 @@ public class SanitizeJSON implements Runnable {
         final KStream<Long, Message> jsonToObjStream = readStream.mapValues(value ->
             this.jsonToMessage(value.toLowerCase()));
 
-        final KStream<Long, Message> jtos = readStream.foreach( (k, v) -> {
-                Long key = k;
-
-         });
-
-
-        jsonToObjStream.to(SINK_TOPIC, Produced.with(Serdes.Long(),
-                        Serdes.serdeFrom(new MessageSerdeSerializer()
-                                , new MessageSerdeDeserializer())));
+        final KStream<Long, Message> jtos = readStream.map( (key, valueJson) ->
+                KeyValue.pair(key, Json2Object.jsonToMesage(valueJson)));
 
         return new KafkaStreams(builder.build(), streamsConfiguration);
     }
