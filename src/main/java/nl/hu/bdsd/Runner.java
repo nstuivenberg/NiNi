@@ -1,5 +1,13 @@
 package nl.hu.bdsd;
 
+import nl.hu.bdsd.jobs.SanitizeJSON;
+import nl.hu.bdsd.spider.JsonPReader;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * Starts all jobs
  */
@@ -7,8 +15,19 @@ package nl.hu.bdsd;
 public class Runner {
     public static void main(String[] args) {
 
-        TopicTester t = new TopicTester();
+        List<Runnable> jobs = new ArrayList<>();
 
-        t.run();
+        SanitizeJSON s = new SanitizeJSON();
+        jobs.add(s);
+        jobs.add(new JsonPReader());
+        jobs.add(new TopicTester());
+
+        ExecutorService exec = Executors.newFixedThreadPool(3);
+
+        for (Runnable r : jobs) {
+            exec.submit(r);
+        }
+
+        exec.shutdown();
     }
 }

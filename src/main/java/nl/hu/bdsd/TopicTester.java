@@ -53,10 +53,6 @@ public class TopicTester implements Runnable {
     }
 
     private void printMessageObject(Message m) {
-        System.out.println("I print");
-        if(m == null) {
-            System.out.println("M is NULL!");
-        }
         System.out.println("Topic Tester: " + m.toString());
     }
 

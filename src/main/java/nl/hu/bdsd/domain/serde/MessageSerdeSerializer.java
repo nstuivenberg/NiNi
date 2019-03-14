@@ -3,6 +3,7 @@ package nl.hu.bdsd.domain.serde;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.hu.bdsd.domain.Message;
 import org.apache.kafka.common.serialization.Serializer;
+
 import java.util.Map;
 
 public class MessageSerdeSerializer implements Serializer<Message> {
@@ -25,9 +26,6 @@ public class MessageSerdeSerializer implements Serializer<Message> {
         byte[] retVal = null;
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            System.out.println("From the serializer");
-            System.out.println("Value of s: " + s);
-            System.out.println(message.toString());
             retVal = objectMapper.writeValueAsString(message).getBytes();
         } catch (Exception e) {
             e.printStackTrace();

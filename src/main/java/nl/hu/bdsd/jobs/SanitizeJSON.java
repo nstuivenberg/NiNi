@@ -65,24 +65,10 @@ public class SanitizeJSON implements Runnable {
                         return new KeyValue<>(aLong, this.jsonToMessage(s));
                     }
                     private Message jsonToMessage(String json) {
-                        System.out.println("Binnenkomende JSON: " + json);
-
                         Json2Object jo = new Json2Object();
-
-                        Message m = jo.jsonToMesage(json);
-                        System.out.println("INSIDIES: " + m.toString());
-
-                        return m;
-
+                        return  jo.jsonToMesage(json);
                     }
                 });
-
-        //converted.foreach((Long k, Message v) -> {
-        //    System.out.println("FOR EACH MOFO");
-        //    System.out.println("key: " + k + " value: " + v.toString());
-        //});
-
-        //Hier is het een dikke vette null....
         converted.to(SINK_TOPIC, Produced.with(Serdes.Long(),
                         Serdes.serdeFrom(new MessageSerdeSerializer()
                                 , new MessageSerdeDeserializer())));

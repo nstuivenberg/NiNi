@@ -144,14 +144,10 @@ public class MessageSource {
                 Arrays.stream(sanitizedDescription.split("\\s+")) // Splitting you string
                         .map(str -> transformWord(str)) // Map as per your logic
                         .collect(Collectors.joining(" ")); // Joining back with space
-        String safe = Jsoup.clean(finalStr, Whitelist.none());
+        this.sanitizedDescription = Jsoup.clean(finalStr, Whitelist.none());
 
-        this.sanitizedDescription = safe;
-        //System.out.println("\n------------------------------\n");
-        //System.out.println(this.sanitizedDescription);
     }
     private String transformWord(String s) {
-        //String[] bannedWords = {"de", "het", "en", "een"};
     try {
         List<String> lines = Files.readAllLines(Paths.get(FILELOCATION), Charset.defaultCharset());
         String[] bannedWords = lines.toArray(new String[lines.size()]);
@@ -163,6 +159,9 @@ public class MessageSource {
     } catch(IOException io) {
         LOGGER.severe("Could not find list of banned words");
     }
+        if(s.contains("https://") || s.contains("http://")) {
+            return "";
+        }
         return s;
     }
 }

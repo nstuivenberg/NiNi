@@ -8,8 +8,8 @@ import nl.hu.bdsd.domain.MessageSourceMetaOOU;
 import javax.json.Json;
 import javax.json.stream.JsonParser;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 
 /**
  * Bevat statische methodes die een JSON bericht omzetten naar een Message-klasse (inclusief relaties).
@@ -20,6 +20,8 @@ import java.io.InputStream;
  * TODO: Arrays verwerken
  */
 public class Json2Object {
+
+    private final static Logger LOGGER = Logger.getLogger(Json2Object.class.getName());
 
     private Message m = new Message();
     private MessageSource messageSource = new MessageSource();
@@ -64,9 +66,6 @@ public class Json2Object {
         messageSourceMeta.setOriginalObjectUrls(messageSourceMetaOOU);
         messageSource.setMeta(messageSourceMeta);
         m.setMessageSource(messageSource);
-
-        System.out.println("Message in j2o: " + m.toString());
-
     }
 
     private void setStringValues(Message message, MessageSource mSource, MessageSourceMeta msMeta,
@@ -113,7 +112,7 @@ public class Json2Object {
         } else if(keyName.equals("html")) {
             msmOOU.setHtml(value);
         } else {
-            System.out.println("Unknown Key: " + keyName);
+            LOGGER.warning("Unknown key: " + keyName);
         }
     }
 
@@ -123,6 +122,9 @@ public class Json2Object {
         }
     }
 
+    /*
+     * Broken
+     */
     private void setBoolValues(MessageSource messageSource, String keyName, boolean value) {
         if(keyName.equals("hidden")) {
             messageSource.setHidden(value);
