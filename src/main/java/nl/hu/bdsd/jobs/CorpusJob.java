@@ -42,8 +42,10 @@ public class CorpusJob implements Runnable {
         streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, IKafkaConstants.KAFKA_BROKERS);
         streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, JOB_NAME);
 
+        //streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-        streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.Long().getClass().getName());
+        //streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.Long().getClass().getName());
+        streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         streamsConfiguration.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 100 * 1000);
 
@@ -57,7 +59,10 @@ public class CorpusJob implements Runnable {
         final Pattern pattern = Pattern.compile("\\W+", Pattern.UNICODE_CHARACTER_CLASS);
 
         final KStream<Long, Message> readStream = builder.stream(SOURCE_TOPIC,
-                Consumed.with(longSerde, messageSerde));
+                Consumed.with(Serdes.Long(), Serdes.serdeFrom(new MessageSerdeSerializer(),
+                        new MessageSerdeDeserializer())));
+
+        //readStream.foreach((k, v) -> {System.out.println(v);});
 
         final KTable<String, Long> wordCounts = readStream
                 .flatMapValues(value -> Arrays

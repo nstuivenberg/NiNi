@@ -1,7 +1,6 @@
 package nl.hu.bdsd;
 
 import nl.hu.bdsd.jobs.SanitizeJSON;
-import nl.hu.bdsd.spider.JsonPReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +17,11 @@ public class Runner {
         List<Runnable> jobs = new ArrayList<>();
 
         SanitizeJSON s = new SanitizeJSON();
-        jobs.add(s);
-        jobs.add(new JsonPReader());
+        //jobs.add(s);
+        //jobs.add(new JsonPReader());
         jobs.add(new TopicTester());
 
-        ExecutorService exec = Executors.newFixedThreadPool(3);
+        ExecutorService exec = Executors.newFixedThreadPool(1);
 
         for (Runnable r : jobs) {
             exec.submit(r);
