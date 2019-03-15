@@ -15,15 +15,15 @@ public class MessageSourceMeta {
 
     private String pfl_url;
 
-    public HashMap<String, Integer> getWordCount() {
-        return wordCount;
+    public HashMap<String, Double> getWordFrequence() {
+        return wordFrequence;
     }
 
-    public void setWordCount(HashMap<String, Integer> wordCount) {
-        this.wordCount = wordCount;
+    public void setWordFrequence(HashMap<String, Double> wordFrequence) {
+        this.wordFrequence = wordFrequence;
     }
 
-    private HashMap<String, Integer> wordCount;
+    private HashMap<String, Double> wordFrequence;
 
     public String getProcessingStarted() {
         return processingStarted;
