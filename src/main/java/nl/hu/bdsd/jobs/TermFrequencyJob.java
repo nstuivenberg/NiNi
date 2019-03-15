@@ -5,6 +5,7 @@ import nl.hu.bdsd.domain.MessageCounter;
 import nl.hu.bdsd.domain.serde.MessageSerdeDeserializer;
 import nl.hu.bdsd.domain.serde.MessageSerdeSerializer;
 import nl.hu.bdsd.kafka_broker.IKafkaConstants;
+import nl.hu.bdsd.textmining.tfidf.WordCount;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
@@ -71,9 +72,10 @@ public class TermFrequencyJob implements Runnable {
 
     private Message wordCounter(Message m) {
 
+
         final Map<String, MessageCounter> wordMap = new HashMap<>();
         String newsMessage = m.getMessageSource().getSanitizedDescription().toLowerCase();
-
+/*
         for(String word : newsMessage.split("\\W")) {
             if(word.isEmpty()) {
                 continue;
@@ -86,6 +88,8 @@ public class TermFrequencyJob implements Runnable {
                 wordMap.put(word, new MessageCounter());
             }
         }
+*/
+        m.getMessageSource().getMeta().setWordFrequence(WordCount.getWordFrequence(m.getMessageSource().getSanitizedDescription().toLowerCase()));
         return m;
     }
 
