@@ -17,7 +17,7 @@ import java.util.Properties;
 
 public class TopicTester implements Runnable {
 
-    private static String SOURCE_TOPIC = "nickTopic";
+    private static String SOURCE_TOPIC = "nick.corpus";
     private static String SINK_TOPIC = "clean_data";
     private KafkaStreams streams;
 
@@ -43,17 +43,23 @@ public class TopicTester implements Runnable {
 
         final StreamsBuilder builder = new StreamsBuilder();
 
-        final KStream<Long, Message> readStream = builder.stream(SOURCE_TOPIC,
-                Consumed.with(longSerde, messageSerde));
+        //final KStream<Long, Message> readStream = builder.stream(SOURCE_TOPIC,
+        //        Consumed.with(longSerde, messageSerde));
+        final KStream<String, Long> readStream = builder.stream(SOURCE_TOPIC,
+                Consumed.with(Serdes.String(), Serdes.Long()));
 
         readStream.foreach(
-                (k, m) -> printMessageObject(m));
+        //        (k, m) -> printMessageObject(m));
+                (k, m) -> printMessageObject(k + " aantal: " + m));
 
         return new KafkaStreams(builder.build(), streamsConfiguration);
     }
 
-    private void printMessageObject(Message m) {
-        System.out.println("Topic Tester: " + m.toString());
+    //private void printMessageObject(Message m) {
+    private void printMessageObject(String s) {
+        //System.out.println("Topic Tester: " + m.toString());
+        System.out.println(s);
+        System.out.println("-------------------------------");
     }
 
     @Override
