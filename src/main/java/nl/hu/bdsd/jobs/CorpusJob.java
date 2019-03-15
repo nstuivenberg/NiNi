@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  */
 
 public class CorpusJob implements Runnable {
-    private static String JOB_NAME = "wordcounter";
+    private static String JOB_NAME = "wordcounter-nick-pc";
     private static String SOURCE_TOPIC = "nick.clean-data";
     private static String SINK_TOPIC = "nick.corpus";
 

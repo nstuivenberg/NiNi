@@ -1,6 +1,9 @@
 package nl.hu.bdsd;
 
+import nl.hu.bdsd.jobs.CorpusJob;
 import nl.hu.bdsd.jobs.SanitizeJSON;
+import nl.hu.bdsd.jobs.TermFrequencyJob;
+import nl.hu.bdsd.spider.JsonPReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +19,10 @@ public class Runner {
 
         List<Runnable> jobs = new ArrayList<>();
 
-        SanitizeJSON s = new SanitizeJSON();
-        //jobs.add(s);
-        //jobs.add(new JsonPReader());
-        jobs.add(new TopicTester());
+        jobs.add(new JsonPReader());
+        jobs.add(new SanitizeJSON());
+        jobs.add(new TermFrequencyJob());
+        jobs.add(new CorpusJob());
 
         ExecutorService exec = Executors.newFixedThreadPool(1);
 
