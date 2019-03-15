@@ -59,14 +59,16 @@ public class CorpusJob implements Runnable {
         final Pattern pattern = Pattern.compile("\\W+", Pattern.UNICODE_CHARACTER_CLASS);
 
         final KStream<Long, Message> readStream = builder.stream(SOURCE_TOPIC,
-                Consumed.with(Serdes.Long(), Serdes.serdeFrom(new MessageSerdeSerializer(),
+                Consumed.with(Serdes.Long(),
+                        Serdes.serdeFrom(new MessageSerdeSerializer(),
                         new MessageSerdeDeserializer())));
 
         //readStream.foreach((k, v) -> {System.out.println(v);});
 
         final KTable<String, Long> wordCounts = readStream
                 .flatMapValues(value -> Arrays
-                        .asList(pattern.split(value.getMessageSource().getSanitizedDescription().toLowerCase())))
+                        .asList(pattern.split(value.getMessageSource()
+                                .getSanitizedDescription().toLowerCase())))
                 .groupBy((key, word) -> word)
                 .count();
 

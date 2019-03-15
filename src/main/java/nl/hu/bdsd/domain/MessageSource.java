@@ -138,10 +138,11 @@ public class MessageSource {
     }
 
     public void setSanitizedDescription(String sanitizedDescription) {
-
-        sanitizedDescription = sanitizedDescription.replaceAll(">","> ");
+        sanitizedDescription = sanitizedDescription
+                .replaceAll(">","> ");
         String finalStr =
-                Arrays.stream(sanitizedDescription.split("\\s+")) // Splitting you string
+                Arrays.stream(sanitizedDescription
+                        .split("\\s+")) // Splitting you string
                         .map(str -> transformWord(str)) // Map as per your logic
                         .collect(Collectors.joining(" ")); // Joining back with space
         this.sanitizedDescription = Jsoup.clean(finalStr, Whitelist.none());
